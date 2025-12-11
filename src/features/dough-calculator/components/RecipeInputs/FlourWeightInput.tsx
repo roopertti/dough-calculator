@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { Input } from '@ui';
+import { useEffect, useState } from 'react';
 
 interface FlourWeightInputProps {
   value: number;

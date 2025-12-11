@@ -4,11 +4,11 @@ export const DOUGH_PRESETS: Record<DoughType, DoughPreset> = {
   bread: {
     id: 'bread',
     name: 'Basic Bread',
-    description: 'All-purpose white or wheat bread',
-    defaultHydration: 65,
+    description: 'Basic white or wheat bread with lean dough',
+    defaultHydration: 70,
     hydrationRange: { min: 60, max: 75 },
     saltPercentage: 2.1,
-    yeastPercentage: 0.35,
+    yeastPercentage: 0.4,
     sugarPercentage: 0,
   },
   pizza: {

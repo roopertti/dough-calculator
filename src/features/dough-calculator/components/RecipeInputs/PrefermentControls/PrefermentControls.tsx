@@ -38,7 +38,7 @@ export default function PrefermentControls({ preferment, onChange }: PrefermentC
       flourPercentage: 30,
       hydration: defaultHydration,
       yeastPercentage: type === 'sourdough' ? undefined : 0.1,
-      starterPercentage: type === 'sourdough' ? 20 : undefined,
+      starterPercentage: type === 'sourdough' ? 10 : undefined,
     });
   };
 

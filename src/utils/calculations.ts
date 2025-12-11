@@ -109,10 +109,7 @@ function calculateWithPreferment(
     },
     sugar: preset.sugarPercentage ? totalFlour * (preset.sugarPercentage / 100) : undefined,
     fat: preset.fatPercentage ? totalFlour * (preset.fatPercentage / 100) : undefined,
-    starter:
-      preferment.type === 'sourdough'
-        ? totalFlour * ((preferment.starterPercentage || 20) / 100)
-        : undefined,
+    starter: preferment.type === 'sourdough' ? prefermentFlour : undefined,
   };
 }
 
