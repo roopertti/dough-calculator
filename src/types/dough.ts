@@ -1,0 +1,67 @@
+export type DoughType = 'bread' | 'pizza' | 'baguette' | 'bagel' | 'focaccia' | 'ciabatta';
+
+export type PrefermentType = 'none' | 'poolish' | 'biga' | 'sourdough';
+
+export interface DoughPreset {
+  id: DoughType;
+  name: string;
+  description: string;
+  defaultHydration: number; // percentage
+  hydrationRange: { min: number; max: number };
+  saltPercentage: number; // as % of flour
+  yeastPercentage: number; // as % of flour
+  sugarPercentage?: number; // optional
+  fatPercentage?: number; // optional (oil, butter)
+}
+
+export interface PrefermentConfig {
+  type: PrefermentType;
+  flourPercentage: number; // % of total flour in preferment
+  hydration: number; // % hydration of preferment
+  yeastPercentage?: number; // for poolish/biga
+  starterPercentage?: number; // for sourdough (as % of flour)
+}
+
+export interface RecipeInputs {
+  doughType: DoughType;
+  flourWeight: number; // grams
+  hydration: number; // percentage
+  preferment: PrefermentConfig | null;
+}
+
+export interface IngredientAmounts {
+  flour: {
+    total: number;
+    inDough: number;
+    inPreferment: number;
+  };
+  water: {
+    total: number;
+    inDough: number;
+    inPreferment: number;
+  };
+  salt: number;
+  yeast: {
+    total: number;
+    inDough: number;
+    inPreferment: number;
+  };
+  sugar?: number;
+  fat?: number;
+  starter?: number; // for sourdough
+}
+
+export type ColdFermentationType = '1-hour-room-temp' | '1-day-fridge' | '2-days-fridge';
+
+export interface FermentationInstructions {
+  prefermentTime?: string;
+  bulkFermentTime?: string;
+  coldFermentationOptions?: ColdFermentationType[];
+}
+
+export interface CalculatedRecipe {
+  inputs: RecipeInputs;
+  ingredients: IngredientAmounts;
+  bakingInstructions: FermentationInstructions;
+  totalDoughWeight: number;
+}
