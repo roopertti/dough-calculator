@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Wheat stalk (center stem) -->
+  <path d="M32 10 L32 58" stroke="#8B6914" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Wheat grains (left side) -->
+  <ellipse cx="26" cy="18" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="24" cy="26" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="26" cy="34" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="24" cy="42" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+
+  <!-- Wheat grains (right side) -->
+  <ellipse cx="38" cy="18" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="40" cy="26" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="38" cy="34" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="40" cy="42" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+
+  <!-- Center grains (top) -->
+  <ellipse cx="32" cy="14" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="32" cy="22" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="32" cy="30" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+  <ellipse cx="32" cy="38" rx="5" ry="7" fill="#D4A76A" stroke="#8B6914" stroke-width="1"/>
+
+  <!-- Wheat awns (thin lines extending from grains) -->
+  <path d="M21 16 L18 12" stroke="#8B6914" stroke-width="1" stroke-linecap="round"/>
+  <path d="M43 16 L46 12" stroke="#8B6914" stroke-width="1" stroke-linecap="round"/>
+  <path d="M19 24 L15 22" stroke="#8B6914" stroke-width="1" stroke-linecap="round"/>
+  <path d="M45 24 L49 22" stroke="#8B6914" stroke-width="1" stroke-linecap="round"/>
+  <path d="M32 10 L32 6" stroke="#8B6914" stroke-width="1" stroke-linecap="round"/>
+  <path d="M30 10 L27 6" stroke="#8B6914" stroke-width="1" stroke-linecap="round"/>
+  <path d="M34 10 L37 6" stroke="#8B6914" stroke-width="1" stroke-linecap="round"/>
+</svg>
