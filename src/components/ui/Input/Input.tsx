@@ -7,6 +7,7 @@ export interface InputProps {
   type?: 'text' | 'number';
   value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
   min?: number;
   max?: number;
   step?: number;
@@ -54,6 +55,7 @@ export default function Input({
   type = 'text',
   value,
   onChange,
+  onBlur,
   min,
   max,
   step,
@@ -75,6 +77,7 @@ export default function Input({
         type={type}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         min={min}
         max={max}
         step={step}
