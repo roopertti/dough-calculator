@@ -1,5 +1,6 @@
 import { DoughCalculator } from '@features/dough-calculator';
 import { Footer, Header, Main, PageLayout } from '@ui';
+import { version } from '../package.json';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <DoughCalculator />
       </Main>
 
-      <Footer>Built with React + TypeScript + Vite</Footer>
+      <Footer>Built with React + TypeScript + Vite | v{version}</Footer>
     </PageLayout>
   );
 }
