@@ -39,6 +39,8 @@ function calculateSimpleRecipe(
   hydration: number,
   preset: DoughPreset
 ): IngredientAmounts {
+  const yeastAmount = Math.max(flourWeight * (preset.yeastPercentage / 100), 0.5);
+
   return {
     flour: {
       total: flourWeight,
@@ -52,8 +54,8 @@ function calculateSimpleRecipe(
     },
     salt: flourWeight * (preset.saltPercentage / 100),
     yeast: {
-      total: flourWeight * (preset.yeastPercentage / 100),
-      inDough: flourWeight * (preset.yeastPercentage / 100),
+      total: yeastAmount,
+      inDough: yeastAmount,
       inPreferment: 0,
     },
     sugar: preset.sugarPercentage ? flourWeight * (preset.sugarPercentage / 100) : undefined,
@@ -82,8 +84,8 @@ function calculateWithPreferment(
 
   if (preferment.type === 'poolish' || preferment.type === 'biga') {
     // Use specified yeast percentage or default to 0.2%
-    prefermentYeast = prefermentFlour * ((preferment.yeastPercentage || 0.2) / 100);
-    doughYeast = totalFlour * (preset.yeastPercentage / 100) - prefermentYeast;
+    prefermentYeast = Math.max(prefermentFlour * ((preferment.yeastPercentage || 0.2) / 100), 0.5);
+    doughYeast = Math.max(totalFlour * (preset.yeastPercentage / 100) - prefermentYeast, 0.5);
   } else if (preferment.type === 'sourdough') {
     // No commercial yeast typically
     prefermentYeast = 0;
