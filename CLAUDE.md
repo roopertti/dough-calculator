@@ -8,6 +8,13 @@ This is a React web application that calculates bread dough recipes using baker'
 
 **Core Concept**: Baker's percentages express all ingredients as percentages of flour weight (flour = 100%). This allows recipes to scale while maintaining proper ratios.
 
+**Key Features**:
+- **Adjustable sourdough ratios**: Customize flour:water:starter ratios for sourdough preferments
+- **URL sharing**: Share recipes via URL parameters with copy-to-clipboard functionality
+- **Yield calculations**: Automatic approximation of how many pieces (loaves, pizzas, etc.) the recipe will make
+- **Dough-specific baking instructions**: Each dough type includes tailored baking guidance
+- **Minimum yeast amounts**: Yeast is clamped to a minimum of 0.5g for practical measurement
+
 ## Project Structure
 
 ```
@@ -103,14 +110,22 @@ Located in `src/utils/calculations.ts`:
 ```
 Water = Flour × (Hydration% / 100)
 Salt = Flour × (SaltPercentage / 100)
-Yeast = Flour × (YeastPercentage / 100)
+Yeast = max(Flour × (YeastPercentage / 100), 0.5g)  // Minimum 0.5g
 ```
 
-**With Preferment**:
+**With Preferment (Poolish/Biga)**:
 - Flour and water split between preferment and main dough
 - Total hydration maintained across both parts
-- Yeast distributed (poolish/biga) or omitted (sourdough)
-- For sourdough: starter amount calculated, assumes 100% hydration
+- Yeast distributed between preferment and main dough
+- Each yeast portion has minimum 0.5g
+
+**With Sourdough** (special handling):
+- **Starter is an additional ingredient** - NOT split from main dough flour/water
+- Flour and water amounts are the full recipe amounts (user-specified hydration)
+- Starter amount = Flour × (StarterPercentage / 100) × (ratio.starter / ratio.flour)
+- Starter breakdown calculated based on customizable flour:water:starter ratio
+- No commercial yeast in sourdough recipes
+- Default ratio is 1:1:1 (equal parts flour, water, and active starter)
 
 ### Component Architecture
 
@@ -136,7 +151,11 @@ Yeast = Flour × (YeastPercentage / 100)
 - Centralized state management for all calculator inputs
 - Manages: `selectedDoughType`, `flourWeight`, `hydration`, `preferment`
 - Automatically recalculates recipe using `useMemo` when inputs change
-- Provides setter functions and reset action
+- Provides setter functions, reset action, and `getShareableUrl()`
+- **URL State Synchronization**:
+  - Reads initial state from URL parameters on page load
+  - Automatically updates URL when any setting changes (using `history.replaceState`)
+  - Enables recipe sharing via URL links
 
 **Context Pattern** (`src/features/dough-calculator/context/DoughCalculatorContext.tsx`):
 - Wraps custom hook in React Context
@@ -146,7 +165,7 @@ Yeast = Flour × (YeastPercentage / 100)
 **Usage Example**:
 ```typescript
 // In component
-const { selectedDoughType, setSelectedDoughType, recipe } = useDoughCalculatorContext();
+const { selectedDoughType, setSelectedDoughType, recipe, getShareableUrl } = useDoughCalculatorContext();
 ```
 
 ### Type System
@@ -154,12 +173,20 @@ const { selectedDoughType, setSelectedDoughType, recipe } = useDoughCalculatorCo
 All types defined in `src/types/dough.ts`:
 
 **Key Interfaces**:
-- `DoughPreset`: Configuration for each dough type (hydration ranges, percentages, baking specs)
+- `DoughPreset`: Configuration for each dough type (hydration ranges, percentages, baking specs, yield calculations)
+  - Optional fields: `enabled`, `bakingInfo`, `yieldCalculation`
 - `RecipeInputs`: User selections (type, flour weight, hydration, preferment)
+- `PrefermentConfig`: Preferment configuration including optional `sourdoughRatio`
+- `SourdoughRatio`: Customizable flour:water:starter ratio for sourdough (default 1:1:1)
 - `IngredientAmounts`: Calculated weights split between `inDough` and `inPreferment`
+  - Includes optional `starter` and `starterBreakdown` for sourdough
+- `StarterBreakdown`: Breakdown of sourdough starter into flour, water, and active starter components
+- `YieldCalculation`: Configuration for calculating recipe yield (gramsPerPiece, unitName, unitNamePlural)
 - `CalculatedRecipe`: Complete output with ingredients, instructions, total weight
 
 Ingredients track three values: `total`, `inDough`, `inPreferment` to support preferment splitting.
+
+For sourdough, `starterBreakdown` provides the components needed to build/feed the starter.
 
 ## Extending the Application
 
@@ -169,7 +196,12 @@ Ingredients track three values: `total`, `inDough`, `inPreferment` to support pr
 2. Add preset configuration in `src/data/doughPresets.ts` with:
    - Hydration range (min/max)
    - Salt, yeast, sugar, fat percentages
-   - Fermentation information (preferment time, bulk ferment time, cold fermentation options)
+   - `enabled: true` to make it available (or `false` for "Coming soon" state)
+   - `bakingInfo`: Specific baking instructions for this dough type
+   - `yieldCalculation`: Configuration for yield approximation
+     - `gramsPerPiece`: Flour weight per piece (e.g., 500g for bread loaf)
+     - `unitName`: Singular form (e.g., "loaf", "pizza")
+     - `unitNamePlural`: Plural form (e.g., "loaves", "pizzas")
 3. Component automatically renders new type (no UI changes needed)
 
 ### Adding New UI Components
@@ -314,7 +346,8 @@ Available styled components in `src/components/ui/`:
 - `Grid`: CSS Grid with auto-fit columns and configurable gap
 
 **Content Components**:
-- `Card`: Interactive card with selected state and hover effects
+- `Card`: Interactive card with selected state, hover effects, and disabled state
+  - `disabled` prop prevents interaction and shows "Coming soon" badge
 - `CardContent`: Card content with title, description, and badge
 - `Heading`: Headings (h1-h6) with configurable margins
 - `RecipeSection`: Recipe section with title and bottom border separator
@@ -329,6 +362,78 @@ Available styled components in `src/components/ui/`:
 
 - Flour weight: 100-5000g (validation in RecipeInputs)
 - Hydration: Range varies by dough type (enforced by preset)
-- Preferment flour: 10-50% of total flour
+- Preferment flour: 10-50% of total flour (for poolish/biga)
+- Sourdough starter: 10-50% of total flour weight
+- Yeast: Minimum 0.5g per portion (for practical measurement)
 - All percentages rounded to 1 decimal place for display
 - Calculations maintain full precision until final display
+
+## URL State Sharing
+
+The app supports sharing recipes via URL parameters (`src/utils/urlState.ts`):
+
+**URL Parameters**:
+- `type`: Dough type (bread, pizza, etc.)
+- `flour`: Flour weight in grams
+- `hydration`: Hydration percentage
+- `pref`: Preferment type (poolish, biga, sourdough)
+- `prefFlour`: Preferment flour percentage
+- `prefHydration`: Preferment hydration
+- `prefYeast`: Yeast percentage (for poolish/biga)
+- `ratio`: Sourdough ratio as comma-separated values (e.g., "1,1,1")
+
+**Implementation**:
+- `serializeRecipeToUrl()`: Converts current state to URL
+- `deserializeRecipeFromUrl()`: Reads URL params and restores state
+- URL updates automatically when settings change (via `useEffect` in `useDoughCalculator`)
+- `CopyLinkButton` component provides one-click sharing with clipboard API
+
+## Yield Calculations
+
+Automatic approximation of how many pieces the recipe will make (`src/utils/yieldCalculator.ts`):
+
+**Current Yield Configurations**:
+- Bread: 500g flour per loaf
+- Pizza: 275g flour per pizza
+- Baguette: 250g flour per baguette
+- Bagel: 90g flour per bagel
+- Focaccia: 500g flour per sheet
+- Ciabatta: 500g flour per loaf
+
+**Display Logic**:
+- Less than 1 piece: "Less than 1 loaf"
+- Exactly 1 piece: "1 loaf"
+- Multiple pieces: "2 loaves" (uses plural form)
+
+## Sourdough Features
+
+Special handling for sourdough preferments:
+
+**Adjustable Ratios** (`SourdoughRatioInput` component):
+- Default ratio: 1:1:1 (flour:water:starter)
+- User can customize each value independently
+- Minimum 0.1 for each component
+- Examples:
+  - 1:1:1 = equal parts (300g starter for 300g preferment flour)
+  - 5:5:1 = less starter (60g starter for 300g preferment flour)
+  - 2:2:1 = moderate starter (150g starter for 300g preferment flour)
+
+**Calculation Method**:
+- Starter is **additional** to main dough (not split from it)
+- Main dough uses full flour and water amounts
+- Starter breakdown shown separately (flour, water, active starter components)
+- No commercial yeast in sourdough recipes
+
+**Display**:
+- Preferment section shows three ingredients:
+  - "Flour (for starter)" - flour needed to feed starter
+  - "Water (for starter)" - water needed to feed starter
+  - "Active Starter" - active starter from fridge
+
+## Version Display
+
+App version from `package.json` is displayed in the footer (`src/App.tsx`):
+```typescript
+import { version } from '../package.json';
+// Footer displays: "Built with React + TypeScript + Vite | v1.0.0"
+```
