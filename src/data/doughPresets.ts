@@ -10,6 +10,7 @@ export const DOUGH_PRESETS: Record<DoughType, DoughPreset> = {
     saltPercentage: 2.1,
     yeastPercentage: 0.4,
     sugarPercentage: 0,
+    enabled: true,
   },
   pizza: {
     id: 'pizza',
@@ -20,6 +21,7 @@ export const DOUGH_PRESETS: Record<DoughType, DoughPreset> = {
     saltPercentage: 2.5,
     yeastPercentage: 0.5,
     fatPercentage: 2,
+    enabled: false,
   },
   baguette: {
     id: 'baguette',
@@ -29,6 +31,7 @@ export const DOUGH_PRESETS: Record<DoughType, DoughPreset> = {
     hydrationRange: { min: 65, max: 75 },
     saltPercentage: 2,
     yeastPercentage: 1,
+    enabled: false,
   },
   bagel: {
     id: 'bagel',
@@ -39,6 +42,7 @@ export const DOUGH_PRESETS: Record<DoughType, DoughPreset> = {
     saltPercentage: 2,
     yeastPercentage: 2,
     sugarPercentage: 4,
+    enabled: false,
   },
   focaccia: {
     id: 'focaccia',
@@ -49,6 +53,7 @@ export const DOUGH_PRESETS: Record<DoughType, DoughPreset> = {
     saltPercentage: 2,
     yeastPercentage: 1.5,
     fatPercentage: 8,
+    enabled: false,
   },
   ciabatta: {
     id: 'ciabatta',
@@ -58,5 +63,6 @@ export const DOUGH_PRESETS: Record<DoughType, DoughPreset> = {
     hydrationRange: { min: 75, max: 85 },
     saltPercentage: 2,
     yeastPercentage: 0.8,
+    enabled: false,
   },
 };

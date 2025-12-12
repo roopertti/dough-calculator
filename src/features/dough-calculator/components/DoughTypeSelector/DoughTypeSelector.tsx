@@ -13,20 +13,22 @@ export default function DoughTypeSelector({ selectedType, onSelect }: DoughTypeS
   return (
     <Section title="Select Dough Type">
       <Grid columns="auto-fit" minColumnWidth="200px" gap="md">
-        {doughTypes.map((preset) => (
-          <Card
-            key={preset.id}
-            selected={selectedType === preset.id}
-            onClick={() => onSelect(preset.id)}
-            variant="interactive"
-          >
-            <CardContent
-              title={preset.name}
-              description={preset.description}
-              badge={`${preset.defaultHydration}% hydration`}
-            />
-          </Card>
-        ))}
+        {doughTypes.map((preset) => {
+          const isEnabled = preset.enabled !== false;
+          const badge = isEnabled ? `${preset.defaultHydration}% hydration` : 'Coming soon';
+
+          return (
+            <Card
+              key={preset.id}
+              selected={selectedType === preset.id && isEnabled}
+              onClick={isEnabled ? () => onSelect(preset.id) : undefined}
+              variant="interactive"
+              disabled={!isEnabled}
+            >
+              <CardContent title={preset.name} description={preset.description} badge={badge} />
+            </Card>
+          );
+        })}
       </Grid>
     </Section>
   );

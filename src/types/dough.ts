@@ -12,6 +12,7 @@ export interface DoughPreset {
   yeastPercentage: number; // as % of flour
   sugarPercentage?: number; // optional
   fatPercentage?: number; // optional (oil, butter)
+  enabled?: boolean; // whether this preset is available for use
 }
 
 export interface SourdoughRatio {

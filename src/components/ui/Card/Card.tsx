@@ -6,6 +6,7 @@ export interface CardProps {
   selected?: boolean;
   onClick?: () => void;
   variant?: 'default' | 'interactive';
+  disabled?: boolean;
   className?: string;
 }
 
@@ -31,6 +32,15 @@ const styles = stylex.create({
     borderColor: colors.primary,
     backgroundColor: colors.primaryLight,
   },
+  disabled: {
+    opacity: 0.6,
+    cursor: 'not-allowed',
+    ':hover': {
+      borderColor: colors.border,
+      transform: 'none',
+      boxShadow: 'none',
+    },
+  },
 });
 
 export default function Card({
@@ -38,22 +48,30 @@ export default function Card({
   selected = false,
   onClick,
   variant = 'default',
+  disabled = false,
   className,
 }: CardProps) {
+  const handleClick = () => {
+    if (!disabled && onClick) {
+      onClick();
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+    if (!disabled && onClick && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
       onClick();
     }
   };
 
-  // If there's an onClick handler, always make it interactive
-  const isInteractive = onClick !== undefined;
+  // If there's an onClick handler and not disabled, make it interactive
+  const isInteractive = onClick !== undefined && !disabled;
 
   const stylexProps = stylex.props(
     styles.card,
-    variant === 'interactive' && styles.interactive,
-    selected && styles.selected
+    variant === 'interactive' && !disabled && styles.interactive,
+    selected && !disabled && styles.selected,
+    disabled && styles.disabled
   );
 
   return (
@@ -61,10 +79,11 @@ export default function Card({
     <div
       {...stylexProps}
       className={className ? `${stylexProps.className} ${className}` : stylexProps.className}
-      onClick={onClick}
+      onClick={handleClick}
       onKeyDown={isInteractive ? handleKeyDown : undefined}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
+      aria-disabled={disabled}
     >
       {children}
     </div>
