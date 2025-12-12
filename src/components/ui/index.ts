@@ -32,6 +32,7 @@ export type { SectionProps } from './Section/Section';
 export { default as Section } from './Section/Section';
 export type { SliderProps } from './Slider/Slider';
 export { default as Slider } from './Slider/Slider';
+export { default as Stack } from './Stack/Stack';
 export type { TimingNoteProps } from './TimingNote/TimingNote';
 export { default as TimingNote } from './TimingNote/TimingNote';
 export type { TotalWeightProps } from './TotalWeight/TotalWeight';

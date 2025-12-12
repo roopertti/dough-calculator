@@ -11,7 +11,10 @@ interface PrefermentControlsProps {
 }
 
 export default function PrefermentControls({ preferment, onChange }: PrefermentControlsProps) {
-  const [showPreferment, setShowPreferment] = useState(false);
+  // Show preferment controls if preferment is already set (e.g., from URL)
+  const [showPreferment, setShowPreferment] = useState(
+    preferment !== null && preferment.type !== 'none'
+  );
 
   const handleToggle = () => {
     const newShowPreferment = !showPreferment;

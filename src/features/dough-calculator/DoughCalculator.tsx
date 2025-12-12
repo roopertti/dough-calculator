@@ -1,4 +1,5 @@
-import { Button, Container } from '@ui';
+import { Button, Container, Stack } from '@ui';
+import CopyLinkButton from './components/CopyLinkButton/CopyLinkButton';
 import DoughTypeSelector from './components/DoughTypeSelector/DoughTypeSelector';
 import RecipeDisplay from './components/RecipeDisplay/RecipeDisplay';
 import RecipeInputs from './components/RecipeInputs/RecipeInputs';
@@ -15,9 +16,12 @@ function DoughCalculatorContent() {
       <DoughTypeSelector selectedType={selectedDoughType} onSelect={setSelectedDoughType} />
       <RecipeInputs />
       <RecipeDisplay recipe={recipe} />
-      <Button variant="secondary" fullWidth onClick={reset}>
-        Reset to Defaults
-      </Button>
+      <Stack>
+        <Button variant="secondary" fullWidth onClick={reset}>
+          Reset to Defaults
+        </Button>
+        <CopyLinkButton />
+      </Stack>
     </Container>
   );
 }
