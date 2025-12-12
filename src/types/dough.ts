@@ -1,6 +1,12 @@
-export type DoughType = 'bread' | 'pizza' | 'baguette' | 'bagel' | 'focaccia' | 'ciabatta';
+export type DoughType =
+  | "bread"
+  | "pizza"
+  | "baguette"
+  | "bagel"
+  | "focaccia"
+  | "ciabatta";
 
-export type PrefermentType = 'none' | 'poolish' | 'biga' | 'sourdough';
+export type PrefermentType = "none" | "poolish" | "biga" | "sourdough";
 
 export interface DoughPreset {
   id: DoughType;
@@ -66,17 +72,20 @@ export interface IngredientAmounts {
   starterBreakdown?: StarterBreakdown; // for sourdough - breakdown of ingredients
 }
 
-export type ColdFermentationType = '1-hour-room-temp' | '1-day-fridge' | '2-days-fridge';
+export type ColdFermentationType =
+  | "1-hour-room-temp"
+  | "1-day-fridge"
+  | "2-days-fridge";
 
-export interface FermentationInstructions {
+export interface BakingInstructions {
   prefermentTime?: string;
   bulkFermentTime?: string;
-  coldFermentationOptions?: ColdFermentationType[];
+  proofingTime?: string;
 }
 
 export interface CalculatedRecipe {
   inputs: RecipeInputs;
   ingredients: IngredientAmounts;
-  bakingInstructions: FermentationInstructions;
+  bakingInstructions: BakingInstructions;
   totalDoughWeight: number;
 }

@@ -3,11 +3,11 @@ export type {
   ColdFermentationType,
   DoughPreset,
   DoughType,
-  FermentationInstructions,
+  BakingInstructions as FermentationInstructions,
   IngredientAmounts,
   PrefermentConfig,
   PrefermentType,
   RecipeInputs,
   SourdoughRatio,
   StarterBreakdown,
-} from './dough';
+} from "./dough";

@@ -1,8 +1,8 @@
-import type { CalculatedRecipe } from '@types';
-import { InstructionText, RecipeSection, Section, TotalWeight } from '@ui';
-import MainDoughSection from './MainDoughSection';
-import PrefermentSection from './PrefermentSection';
-import SimpleRecipeSection from './SimpleRecipeSection';
+import type { CalculatedRecipe } from "@types";
+import { InstructionText, RecipeSection, Section, TotalWeight } from "@ui";
+import MainDoughSection from "./MainDoughSection";
+import PrefermentSection from "./PrefermentSection";
+import SimpleRecipeSection from "./SimpleRecipeSection";
 
 interface RecipeDisplayProps {
   recipe: CalculatedRecipe;
@@ -10,7 +10,7 @@ interface RecipeDisplayProps {
 
 export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
   const { ingredients, bakingInstructions, totalDoughWeight, inputs } = recipe;
-  const hasPreferment = inputs.preferment && inputs.preferment.type !== 'none';
+  const hasPreferment = inputs.preferment && inputs.preferment.type !== "none";
 
   console.log(bakingInstructions);
 
@@ -22,7 +22,7 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
         <>
           <PrefermentSection
             ingredients={ingredients}
-            prefermentType={inputs.preferment?.type || ''}
+            prefermentType={inputs.preferment?.type || ""}
             prefermentTime={bakingInstructions.prefermentTime}
           />
           <MainDoughSection ingredients={ingredients} />
@@ -37,9 +37,9 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
             {bakingInstructions.bulkFermentTime}
           </InstructionText>
         )}
-        {bakingInstructions.coldFermentationOptions && (
-          <InstructionText label="Cold Fermentation Options">
-            {bakingInstructions.coldFermentationOptions.join(', ')}
+        {bakingInstructions.proofingTime && (
+          <InstructionText label="Proofing time">
+            {bakingInstructions.proofingTime}
           </InstructionText>
         )}
       </RecipeSection>

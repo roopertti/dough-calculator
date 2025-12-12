@@ -1,4 +1,4 @@
-import { DOUGH_PRESETS } from '@data/doughPresets';
+import { DOUGH_PRESETS } from "@data/doughPresets";
 import type {
   CalculatedRecipe,
   ColdFermentationType,
@@ -7,7 +7,7 @@ import type {
   IngredientAmounts,
   PrefermentConfig,
   RecipeInputs,
-} from '@types';
+} from "@types";
 
 export function calculateRecipe(inputs: RecipeInputs): CalculatedRecipe {
   const preset = DOUGH_PRESETS[inputs.doughType];
@@ -15,12 +15,17 @@ export function calculateRecipe(inputs: RecipeInputs): CalculatedRecipe {
 
   let ingredients: IngredientAmounts;
 
-  if (!preferment || preferment.type === 'none') {
+  if (!preferment || preferment.type === "none") {
     // Simple calculation without preferment
     ingredients = calculateSimpleRecipe(flourWeight, hydration, preset);
   } else {
     // With preferment
-    ingredients = calculateWithPreferment(flourWeight, hydration, preferment, preset);
+    ingredients = calculateWithPreferment(
+      flourWeight,
+      hydration,
+      preferment,
+      preset,
+    );
   }
 
   const totalDoughWeight = calculateTotalWeight(ingredients);
@@ -37,9 +42,12 @@ export function calculateRecipe(inputs: RecipeInputs): CalculatedRecipe {
 function calculateSimpleRecipe(
   flourWeight: number,
   hydration: number,
-  preset: DoughPreset
+  preset: DoughPreset,
 ): IngredientAmounts {
-  const yeastAmount = Math.max(flourWeight * (preset.yeastPercentage / 100), 0.5);
+  const yeastAmount = Math.max(
+    flourWeight * (preset.yeastPercentage / 100),
+    0.5,
+  );
 
   return {
     flour: {
@@ -58,8 +66,12 @@ function calculateSimpleRecipe(
       inDough: yeastAmount,
       inPreferment: 0,
     },
-    sugar: preset.sugarPercentage ? flourWeight * (preset.sugarPercentage / 100) : undefined,
-    fat: preset.fatPercentage ? flourWeight * (preset.fatPercentage / 100) : undefined,
+    sugar: preset.sugarPercentage
+      ? flourWeight * (preset.sugarPercentage / 100)
+      : undefined,
+    fat: preset.fatPercentage
+      ? flourWeight * (preset.fatPercentage / 100)
+      : undefined,
   };
 }
 
@@ -67,10 +79,10 @@ function calculateWithPreferment(
   totalFlour: number,
   targetHydration: number,
   preferment: PrefermentConfig,
-  preset: DoughPreset
+  preset: DoughPreset,
 ): IngredientAmounts {
   // Special handling for sourdough - starter is an additional ingredient
-  if (preferment.type === 'sourdough') {
+  if (preferment.type === "sourdough") {
     // Sourdough starter calculation based on percentage of flour and ratio
     const starterPercentage = preferment.flourPercentage; // Reinterpret as starter %
     const ratio = preferment.sourdoughRatio || {
@@ -104,8 +116,12 @@ function calculateWithPreferment(
         inPreferment: 0,
         inDough: 0,
       },
-      sugar: preset.sugarPercentage ? totalFlour * (preset.sugarPercentage / 100) : undefined,
-      fat: preset.fatPercentage ? totalFlour * (preset.fatPercentage / 100) : undefined,
+      sugar: preset.sugarPercentage
+        ? totalFlour * (preset.sugarPercentage / 100)
+        : undefined,
+      fat: preset.fatPercentage
+        ? totalFlour * (preset.fatPercentage / 100)
+        : undefined,
       starter: starterAmount,
       starterBreakdown: {
         flour: starterFlour,
@@ -127,9 +143,12 @@ function calculateWithPreferment(
   // Yeast distribution
   const prefermentYeast = Math.max(
     prefermentFlour * ((preferment.yeastPercentage || 0.2) / 100),
-    0.5
+    0.5,
   );
-  const doughYeast = Math.max(totalFlour * (preset.yeastPercentage / 100) - prefermentYeast, 0.5);
+  const doughYeast = Math.max(
+    totalFlour * (preset.yeastPercentage / 100) - prefermentYeast,
+    0.5,
+  );
 
   return {
     flour: {
@@ -148,8 +167,12 @@ function calculateWithPreferment(
       inPreferment: prefermentYeast,
       inDough: doughYeast,
     },
-    sugar: preset.sugarPercentage ? totalFlour * (preset.sugarPercentage / 100) : undefined,
-    fat: preset.fatPercentage ? totalFlour * (preset.fatPercentage / 100) : undefined,
+    sugar: preset.sugarPercentage
+      ? totalFlour * (preset.sugarPercentage / 100)
+      : undefined,
+    fat: preset.fatPercentage
+      ? totalFlour * (preset.fatPercentage / 100)
+      : undefined,
     starter: undefined,
   };
 }
@@ -177,34 +200,36 @@ function calculateTotalWeight(ingredients: IngredientAmounts): number {
   return total;
 }
 
-function formatBakingInstructions(preferment: PrefermentConfig | null): FermentationInstructions {
+function formatBakingInstructions(
+  preferment: PrefermentConfig | null,
+): FermentationInstructions {
   let prefermentTime: string | undefined;
   let bulkFermentTime: string | undefined;
-  let coldFermentationOptions: ColdFermentationType[] | undefined;
+  let proofingTime: string;
 
-  if (preferment && preferment.type !== 'none') {
-    if (preferment.type === 'poolish') {
-      prefermentTime = '12-16 hours at room temperature';
-      bulkFermentTime = '2-3 hours';
-      coldFermentationOptions = ['1-hour-room-temp', '1-day-fridge'];
-    } else if (preferment.type === 'biga') {
-      prefermentTime = '12-16 hours at room temperature';
-      bulkFermentTime = '2-3 hours';
-      coldFermentationOptions = ['1-hour-room-temp', '1-day-fridge'];
-    } else if (preferment.type === 'sourdough') {
-      prefermentTime = '4-8 hours at room temperature (or use active starter)';
-      bulkFermentTime = '4-6 hours';
-      coldFermentationOptions = ['1-day-fridge', '2-days-fridge'];
+  if (preferment && preferment.type !== "none") {
+    if (preferment.type === "poolish") {
+      prefermentTime = "12-16 hours at room temperature";
+      bulkFermentTime = "2-3 hours";
+      proofingTime = "1 hour at room temperature or up to 2 days in the fridge";
+    } else if (preferment.type === "biga") {
+      prefermentTime = "12-16 hours at room temperature";
+      bulkFermentTime = "2-3 hours";
+      proofingTime = "1 hour at room temperature or up to 2 days in the fridge";
+    } else if (preferment.type === "sourdough") {
+      prefermentTime = "4-8 hours at room temperature (or use active starter)";
+      bulkFermentTime = "4-6 hours";
+      proofingTime = "12 hours in the fridge";
     }
   } else {
     // Estimate based on yeast amount
-    bulkFermentTime = '1.5-2 hours';
-    coldFermentationOptions = ['1-hour-room-temp', '1-day-fridge'];
+    bulkFermentTime = "1.5-2 hours";
+    proofingTime = "1 hour at room temperature or 1 day in the fridge";
   }
 
   return {
     prefermentTime,
     bulkFermentTime,
-    coldFermentationOptions,
+    proofingTime,
   };
 }
