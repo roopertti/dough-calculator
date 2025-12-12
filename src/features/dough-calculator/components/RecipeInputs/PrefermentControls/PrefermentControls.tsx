@@ -74,6 +74,7 @@ export default function PrefermentControls({ preferment, onChange }: PrefermentC
               <PrefermentFlourSlider
                 value={preferment.flourPercentage}
                 onChange={handlePrefermentFlourChange}
+                prefermentType={preferment.type}
               />
 
               {preferment.type === 'sourdough' && preferment.sourdoughRatio && (

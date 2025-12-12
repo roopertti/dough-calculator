@@ -49,7 +49,34 @@ export default function PrefermentSection({
     });
   }
 
-  if (ingredients.starter !== undefined) {
+  if (ingredients.starterBreakdown) {
+    // Display sourdough starter breakdown
+    prefermentIngredients.push({
+      name: 'Flour (for starter)',
+      amount: formatWeight(ingredients.starterBreakdown.flour),
+      bakerPercentage: calculateBakerPercentage(
+        ingredients.starterBreakdown.flour,
+        ingredients.flour.total
+      ),
+    });
+    prefermentIngredients.push({
+      name: 'Water (for starter)',
+      amount: formatWeight(ingredients.starterBreakdown.water),
+      bakerPercentage: calculateBakerPercentage(
+        ingredients.starterBreakdown.water,
+        ingredients.flour.total
+      ),
+    });
+    prefermentIngredients.push({
+      name: 'Active Starter',
+      amount: formatWeight(ingredients.starterBreakdown.starter),
+      bakerPercentage: calculateBakerPercentage(
+        ingredients.starterBreakdown.starter,
+        ingredients.flour.total
+      ),
+    });
+  } else if (ingredients.starter !== undefined) {
+    // Fallback for old format (shouldn't happen with new calculations)
     prefermentIngredients.push({
       name: 'Sourdough Starter',
       amount: formatWeight(ingredients.starter),

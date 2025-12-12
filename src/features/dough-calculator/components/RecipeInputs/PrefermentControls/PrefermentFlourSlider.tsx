@@ -1,26 +1,34 @@
+import type { PrefermentType } from '@types';
 import { Slider } from '@ui';
 
 interface PrefermentFlourSliderProps {
   value: number;
   onChange: (percentage: number) => void;
+  prefermentType: PrefermentType;
 }
 
-export default function PrefermentFlourSlider({ value, onChange }: PrefermentFlourSliderProps) {
+export default function PrefermentFlourSlider({
+  value,
+  onChange,
+  prefermentType,
+}: PrefermentFlourSliderProps) {
   const handleChange = (newValue: number) => {
     if (newValue >= 10 && newValue <= 50) {
       onChange(newValue);
     }
   };
 
+  const label = prefermentType === 'sourdough' ? 'Starter (% of flour):' : 'Flour in Preferment:';
+
   return (
     <Slider
       id="prefermentFlour"
-      label="Flour in Preferment:"
+      label={label}
       value={value}
       onChange={handleChange}
       min={10}
       max={50}
-      step={5}
+      step={1}
       unit="%"
     />
   );

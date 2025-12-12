@@ -69,7 +69,53 @@ function calculateWithPreferment(
   preferment: PrefermentConfig,
   preset: DoughPreset
 ): IngredientAmounts {
-  // Preferment calculations
+  // Special handling for sourdough - starter is an additional ingredient
+  if (preferment.type === 'sourdough') {
+    // Sourdough starter calculation based on percentage of flour and ratio
+    const starterPercentage = preferment.flourPercentage; // Reinterpret as starter %
+    const ratio = preferment.sourdoughRatio || {
+      flour: 1,
+      water: 1,
+      starter: 1,
+    };
+    const starterAmount = totalFlour * (starterPercentage / 100);
+
+    // Calculate starter breakdown based on ratio
+    const totalRatioParts = ratio.flour + ratio.water + ratio.starter;
+    const starterFlour = starterAmount * (ratio.flour / totalRatioParts);
+    const starterWater = starterAmount * (ratio.water / totalRatioParts);
+    const starterStarter = starterAmount * (ratio.starter / totalRatioParts);
+
+    // For sourdough, use full flour and water amounts (don't split)
+    return {
+      flour: {
+        total: totalFlour,
+        inPreferment: 0,
+        inDough: totalFlour,
+      },
+      water: {
+        total: totalFlour * (targetHydration / 100),
+        inPreferment: 0,
+        inDough: totalFlour * (targetHydration / 100),
+      },
+      salt: totalFlour * (preset.saltPercentage / 100),
+      yeast: {
+        total: 0,
+        inPreferment: 0,
+        inDough: 0,
+      },
+      sugar: preset.sugarPercentage ? totalFlour * (preset.sugarPercentage / 100) : undefined,
+      fat: preset.fatPercentage ? totalFlour * (preset.fatPercentage / 100) : undefined,
+      starter: starterAmount,
+      starterBreakdown: {
+        flour: starterFlour,
+        water: starterWater,
+        starter: starterStarter,
+      },
+    };
+  }
+
+  // Standard preferment calculations (poolish/biga)
   const prefermentFlour = totalFlour * (preferment.flourPercentage / 100);
   const prefermentWater = prefermentFlour * (preferment.hydration / 100);
 
@@ -79,25 +125,11 @@ function calculateWithPreferment(
   const doughWater = totalWater - prefermentWater;
 
   // Yeast distribution
-  let prefermentYeast = 0;
-  let doughYeast = 0;
-
-  if (preferment.type === 'poolish' || preferment.type === 'biga') {
-    // Use specified yeast percentage or default to 0.2%
-    prefermentYeast = Math.max(prefermentFlour * ((preferment.yeastPercentage || 0.2) / 100), 0.5);
-    doughYeast = Math.max(totalFlour * (preset.yeastPercentage / 100) - prefermentYeast, 0.5);
-  } else if (preferment.type === 'sourdough') {
-    // No commercial yeast typically
-    prefermentYeast = 0;
-    doughYeast = 0;
-  }
-
-  // Calculate sourdough starter amount based on ratio
-  let starterAmount: number | undefined;
-  if (preferment.type === 'sourdough') {
-    const ratio = preferment.sourdoughRatio || { flour: 1, water: 1, starter: 1 };
-    starterAmount = prefermentFlour * (ratio.starter / ratio.flour);
-  }
+  const prefermentYeast = Math.max(
+    prefermentFlour * ((preferment.yeastPercentage || 0.2) / 100),
+    0.5
+  );
+  const doughYeast = Math.max(totalFlour * (preset.yeastPercentage / 100) - prefermentYeast, 0.5);
 
   return {
     flour: {
@@ -118,7 +150,7 @@ function calculateWithPreferment(
     },
     sugar: preset.sugarPercentage ? totalFlour * (preset.sugarPercentage / 100) : undefined,
     fat: preset.fatPercentage ? totalFlour * (preset.fatPercentage / 100) : undefined,
-    starter: starterAmount,
+    starter: undefined,
   };
 }
 

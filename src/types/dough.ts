@@ -36,6 +36,12 @@ export interface RecipeInputs {
   preferment: PrefermentConfig | null;
 }
 
+export interface StarterBreakdown {
+  flour: number;
+  water: number;
+  starter: number;
+}
+
 export interface IngredientAmounts {
   flour: {
     total: number;
@@ -55,7 +61,8 @@ export interface IngredientAmounts {
   };
   sugar?: number;
   fat?: number;
-  starter?: number; // for sourdough
+  starter?: number; // for sourdough - total amount
+  starterBreakdown?: StarterBreakdown; // for sourdough - breakdown of ingredients
 }
 
 export type ColdFermentationType = '1-hour-room-temp' | '1-day-fridge' | '2-days-fridge';

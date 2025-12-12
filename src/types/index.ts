@@ -9,4 +9,5 @@ export type {
   PrefermentType,
   RecipeInputs,
   SourdoughRatio,
+  StarterBreakdown,
 } from './dough';
