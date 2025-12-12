@@ -1,12 +1,6 @@
-export type DoughType =
-  | "bread"
-  | "pizza"
-  | "baguette"
-  | "bagel"
-  | "focaccia"
-  | "ciabatta";
+export type DoughType = 'bread' | 'pizza' | 'baguette' | 'bagel' | 'focaccia' | 'ciabatta';
 
-export type PrefermentType = "none" | "poolish" | "biga" | "sourdough";
+export type PrefermentType = 'none' | 'poolish' | 'biga' | 'sourdough';
 
 export interface DoughPreset {
   id: DoughType;
@@ -19,6 +13,7 @@ export interface DoughPreset {
   sugarPercentage?: number; // optional
   fatPercentage?: number; // optional (oil, butter)
   enabled?: boolean; // whether this preset is available for use
+  bakingInfo?: string; // baking instructions specific to this dough type
 }
 
 export interface SourdoughRatio {
@@ -71,11 +66,6 @@ export interface IngredientAmounts {
   starter?: number; // for sourdough - total amount
   starterBreakdown?: StarterBreakdown; // for sourdough - breakdown of ingredients
 }
-
-export type ColdFermentationType =
-  | "1-hour-room-temp"
-  | "1-day-fridge"
-  | "2-days-fridge";
 
 export interface BakingInstructions {
   prefermentTime?: string;

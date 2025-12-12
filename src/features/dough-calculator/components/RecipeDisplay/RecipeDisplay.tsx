@@ -1,8 +1,9 @@
-import type { CalculatedRecipe } from "@types";
-import { InstructionText, RecipeSection, Section, TotalWeight } from "@ui";
-import MainDoughSection from "./MainDoughSection";
-import PrefermentSection from "./PrefermentSection";
-import SimpleRecipeSection from "./SimpleRecipeSection";
+import { DOUGH_PRESETS } from '@data/doughPresets';
+import type { CalculatedRecipe } from '@types';
+import { InstructionText, RecipeSection, Section, TotalWeight } from '@ui';
+import MainDoughSection from './MainDoughSection';
+import PrefermentSection from './PrefermentSection';
+import SimpleRecipeSection from './SimpleRecipeSection';
 
 interface RecipeDisplayProps {
   recipe: CalculatedRecipe;
@@ -10,7 +11,8 @@ interface RecipeDisplayProps {
 
 export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
   const { ingredients, bakingInstructions, totalDoughWeight, inputs } = recipe;
-  const hasPreferment = inputs.preferment && inputs.preferment.type !== "none";
+  const hasPreferment = inputs.preferment && inputs.preferment.type !== 'none';
+  const doughPreset = DOUGH_PRESETS[inputs.doughType];
 
   console.log(bakingInstructions);
 
@@ -22,7 +24,7 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
         <>
           <PrefermentSection
             ingredients={ingredients}
-            prefermentType={inputs.preferment?.type || ""}
+            prefermentType={inputs.preferment?.type || ''}
             prefermentTime={bakingInstructions.prefermentTime}
           />
           <MainDoughSection ingredients={ingredients} />
@@ -38,9 +40,10 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
           </InstructionText>
         )}
         {bakingInstructions.proofingTime && (
-          <InstructionText label="Proofing time">
-            {bakingInstructions.proofingTime}
-          </InstructionText>
+          <InstructionText label="Proofing time">{bakingInstructions.proofingTime}</InstructionText>
+        )}
+        {doughPreset.bakingInfo && (
+          <InstructionText label="Baking">{doughPreset.bakingInfo}</InstructionText>
         )}
       </RecipeSection>
     </Section>
