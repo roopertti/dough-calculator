@@ -1,7 +1,6 @@
 export type {
   BakingInstructions as FermentationInstructions,
   CalculatedRecipe,
-  ColdFermentationType,
   DoughPreset,
   DoughType,
   IngredientAmounts,
@@ -10,4 +9,5 @@ export type {
   RecipeInputs,
   SourdoughRatio,
   StarterBreakdown,
+  YieldCalculation,
 } from './dough';

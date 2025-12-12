@@ -2,6 +2,12 @@ export type DoughType = 'bread' | 'pizza' | 'baguette' | 'bagel' | 'focaccia' | 
 
 export type PrefermentType = 'none' | 'poolish' | 'biga' | 'sourdough';
 
+export interface YieldCalculation {
+  gramsPerPiece: number; // grams of flour per piece
+  unitName: string; // e.g., "loaf", "pizza", "baguette", "bagel"
+  unitNamePlural: string; // e.g., "loaves", "pizzas", "baguettes", "bagels"
+}
+
 export interface DoughPreset {
   id: DoughType;
   name: string;
@@ -14,6 +20,7 @@ export interface DoughPreset {
   fatPercentage?: number; // optional (oil, butter)
   enabled?: boolean; // whether this preset is available for use
   bakingInfo?: string; // baking instructions specific to this dough type
+  yieldCalculation?: YieldCalculation; // how to calculate yield for this dough type
 }
 
 export interface SourdoughRatio {

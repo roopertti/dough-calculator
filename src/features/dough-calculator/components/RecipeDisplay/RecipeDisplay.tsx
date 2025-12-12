@@ -1,6 +1,7 @@
 import { DOUGH_PRESETS } from '@data/doughPresets';
 import type { CalculatedRecipe } from '@types';
 import { InstructionText, RecipeSection, Section, TotalWeight } from '@ui';
+import { calculateYield } from '@utils/yieldCalculator';
 import MainDoughSection from './MainDoughSection';
 import PrefermentSection from './PrefermentSection';
 import SimpleRecipeSection from './SimpleRecipeSection';
@@ -13,12 +14,14 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
   const { ingredients, bakingInstructions, totalDoughWeight, inputs } = recipe;
   const hasPreferment = inputs.preferment && inputs.preferment.type !== 'none';
   const doughPreset = DOUGH_PRESETS[inputs.doughType];
+  const yieldText = calculateYield(inputs.flourWeight, doughPreset.yieldCalculation);
 
   console.log(bakingInstructions);
 
   return (
     <Section title="Your Recipe" variant="elevated">
       <TotalWeight weight={totalDoughWeight} />
+      {yieldText && <InstructionText label="Yield">{yieldText}</InstructionText>}
 
       {hasPreferment && (
         <>
