@@ -8,4 +8,5 @@ export type {
   PrefermentConfig,
   PrefermentType,
   RecipeInputs,
+  SourdoughRatio,
 } from './dough';

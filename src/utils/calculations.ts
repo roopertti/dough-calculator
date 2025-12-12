@@ -92,6 +92,13 @@ function calculateWithPreferment(
     doughYeast = 0;
   }
 
+  // Calculate sourdough starter amount based on ratio
+  let starterAmount: number | undefined;
+  if (preferment.type === 'sourdough') {
+    const ratio = preferment.sourdoughRatio || { flour: 1, water: 1, starter: 1 };
+    starterAmount = prefermentFlour * (ratio.starter / ratio.flour);
+  }
+
   return {
     flour: {
       total: totalFlour,
@@ -111,7 +118,7 @@ function calculateWithPreferment(
     },
     sugar: preset.sugarPercentage ? totalFlour * (preset.sugarPercentage / 100) : undefined,
     fat: preset.fatPercentage ? totalFlour * (preset.fatPercentage / 100) : undefined,
-    starter: preferment.type === 'sourdough' ? prefermentFlour : undefined,
+    starter: starterAmount,
   };
 }
 

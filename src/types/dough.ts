@@ -14,12 +14,19 @@ export interface DoughPreset {
   fatPercentage?: number; // optional (oil, butter)
 }
 
+export interface SourdoughRatio {
+  flour: number;
+  water: number;
+  starter: number;
+}
+
 export interface PrefermentConfig {
   type: PrefermentType;
   flourPercentage: number; // % of total flour in preferment
   hydration: number; // % hydration of preferment
   yeastPercentage?: number; // for poolish/biga
   starterPercentage?: number; // for sourdough (as % of flour)
+  sourdoughRatio?: SourdoughRatio; // for sourdough: flour:water:starter ratio
 }
 
 export interface RecipeInputs {
