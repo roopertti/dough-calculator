@@ -18,15 +18,13 @@ export function serializeRecipeToUrl(inputs: RecipeInputs, hideRecipeControls?: 
   if (inputs.preferment && inputs.preferment.type !== 'none') {
     params.set('pref', inputs.preferment.type);
     params.set('prefFlour', inputs.preferment.flourPercentage.toString());
-    params.set('prefHydration', inputs.preferment.hydration.toString());
 
-    if (inputs.preferment.yeastPercentage !== undefined) {
-      params.set('prefYeast', inputs.preferment.yeastPercentage.toString());
-    }
-
-    if (inputs.preferment.sourdoughRatio) {
-      const { flour, water, starter } = inputs.preferment.sourdoughRatio;
-      params.set('ratio', `${flour},${water},${starter}`);
+    // Only include ratio for sourdough
+    if (inputs.preferment.type === 'sourdough') {
+      if (inputs.preferment.sourdoughRatio) {
+        const { flour, water, starter } = inputs.preferment.sourdoughRatio;
+        params.set('ratio', `${flour},${water},${starter}`);
+      }
     }
   }
 
@@ -58,23 +56,43 @@ export function deserializeRecipeFromUrl(): URLState | null {
 
   const pref = params.get('pref');
   if (pref && pref !== 'none') {
-    const preferment: PrefermentConfig = {
-      type: pref as PrefermentConfig['type'],
-      flourPercentage: Number.parseFloat(params.get('prefFlour') || '30'),
-      hydration: Number.parseFloat(params.get('prefHydration') || '100'),
-    };
+    const prefermentType = pref as PrefermentConfig['type'];
+    let preferment: PrefermentConfig;
 
-    const yeast = params.get('prefYeast');
-    if (yeast) {
-      preferment.yeastPercentage = Number.parseFloat(yeast);
-    }
+    if (prefermentType === 'sourdough') {
+      // For sourdough, read from URL or use defaults
+      preferment = {
+        type: 'sourdough',
+        flourPercentage: Number.parseFloat(params.get('prefFlour') || '30'),
+        hydration: 100,
+        yeastPercentage: undefined,
+        starterPercentage: 10,
+        sourdoughRatio: { flour: 1, water: 1, starter: 1 },
+      };
 
-    const ratio = params.get('ratio');
-    if (ratio && pref === 'sourdough') {
-      const [flour, water, starter] = ratio.split(',').map((v) => Number.parseFloat(v));
-      if (flour && water && starter) {
-        preferment.sourdoughRatio = { flour, water, starter };
+      const ratio = params.get('ratio');
+      if (ratio) {
+        const [flour, water, starter] = ratio.split(',').map((v) => Number.parseFloat(v));
+        if (flour && water && starter) {
+          preferment.sourdoughRatio = { flour, water, starter };
+        }
       }
+    } else if (prefermentType === 'poolish') {
+      preferment = {
+        type: 'poolish',
+        flourPercentage: Number.parseFloat(params.get('prefFlour') || '30'),
+        hydration: 100,
+        yeastPercentage: 0.1,
+        starterPercentage: undefined,
+      };
+    } else {
+      preferment = {
+        type: 'biga',
+        flourPercentage: Number.parseFloat(params.get('prefFlour') || '30'),
+        hydration: 60,
+        yeastPercentage: 0.1,
+        starterPercentage: undefined,
+      };
     }
 
     result.preferment = preferment;
