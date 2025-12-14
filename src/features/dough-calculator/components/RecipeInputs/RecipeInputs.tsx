@@ -1,4 +1,3 @@
-import { Section } from '@ui';
 import { useDoughCalculatorContext } from '../../context/DoughCalculatorContext';
 import FlourWeightInput from './FlourWeightInput';
 import HydrationSlider from './HydrationSlider';
@@ -16,10 +15,10 @@ export default function RecipeInputs() {
   } = useDoughCalculatorContext();
 
   return (
-    <Section title="Recipe Parameters" variant="elevated">
+    <>
       <FlourWeightInput value={flourWeight} onChange={setFlourWeight} />
       <HydrationSlider value={hydration} onChange={setHydration} doughType={selectedDoughType} />
       <PrefermentControls preferment={preferment} onChange={setPreferment} />
-    </Section>
+    </>
   );
 }

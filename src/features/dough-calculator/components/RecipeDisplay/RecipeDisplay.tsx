@@ -1,6 +1,6 @@
 import { DOUGH_PRESETS } from '@data/doughPresets';
 import type { CalculatedRecipe } from '@types';
-import { InstructionText, RecipeSection, Section, TotalWeight } from '@ui';
+import { InstructionText, RecipeSection, TotalWeight } from '@ui';
 import { calculateYield } from '@utils/yieldCalculator';
 import MainDoughSection from './MainDoughSection';
 import PrefermentSection from './PrefermentSection';
@@ -19,7 +19,7 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
   console.log(bakingInstructions);
 
   return (
-    <Section title="Your Recipe" variant="elevated">
+    <>
       <TotalWeight weight={totalDoughWeight} />
       {yieldText && <InstructionText label="Yield">{yieldText}</InstructionText>}
 
@@ -49,6 +49,6 @@ export default function RecipeDisplay({ recipe }: RecipeDisplayProps) {
           <InstructionText label="Baking">{doughPreset.bakingInfo}</InstructionText>
         )}
       </RecipeSection>
-    </Section>
+    </>
   );
 }

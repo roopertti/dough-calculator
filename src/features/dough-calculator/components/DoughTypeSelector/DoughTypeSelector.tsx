@@ -1,6 +1,6 @@
 import { DOUGH_PRESETS } from '@data/doughPresets';
 import type { DoughType } from '@types';
-import { Card, CardContent, Grid, Section } from '@ui';
+import { Card, CardContent, Grid } from '@ui';
 
 interface DoughTypeSelectorProps {
   selectedType: DoughType;
@@ -11,25 +11,23 @@ export default function DoughTypeSelector({ selectedType, onSelect }: DoughTypeS
   const doughTypes = Object.values(DOUGH_PRESETS);
 
   return (
-    <Section title="Select Dough Type">
-      <Grid columns="auto-fit" minColumnWidth="200px" gap="md">
-        {doughTypes.map((preset) => {
-          const isEnabled = preset.enabled !== false;
-          const badge = isEnabled ? `${preset.defaultHydration}% hydration` : 'Coming soon';
+    <Grid columns="auto-fit" minColumnWidth="200px" gap="md">
+      {doughTypes.map((preset) => {
+        const isEnabled = preset.enabled !== false;
+        const badge = isEnabled ? `${preset.defaultHydration}% hydration` : 'Coming soon';
 
-          return (
-            <Card
-              key={preset.id}
-              selected={selectedType === preset.id && isEnabled}
-              onClick={isEnabled ? () => onSelect(preset.id) : undefined}
-              variant="interactive"
-              disabled={!isEnabled}
-            >
-              <CardContent title={preset.name} description={preset.description} badge={badge} />
-            </Card>
-          );
-        })}
-      </Grid>
-    </Section>
+        return (
+          <Card
+            key={preset.id}
+            selected={selectedType === preset.id && isEnabled}
+            onClick={isEnabled ? () => onSelect(preset.id) : undefined}
+            variant="interactive"
+            disabled={!isEnabled}
+          >
+            <CardContent title={preset.name} description={preset.description} badge={badge} />
+          </Card>
+        );
+      })}
+    </Grid>
   );
 }

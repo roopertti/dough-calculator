@@ -1,7 +1,15 @@
 import type { DoughType, PrefermentConfig, RecipeInputs } from '@types';
 
-export function serializeRecipeToUrl(inputs: RecipeInputs): string {
+export interface URLState extends Partial<RecipeInputs> {
+  hideControls?: boolean;
+}
+
+export function serializeRecipeToUrl(inputs: RecipeInputs, hideRecipeControls?: boolean): string {
   const params = new URLSearchParams();
+
+  if (hideRecipeControls) {
+    params.set('hideControls', 'true');
+  }
 
   params.set('type', inputs.doughType);
   params.set('flour', inputs.flourWeight.toString());
@@ -25,14 +33,19 @@ export function serializeRecipeToUrl(inputs: RecipeInputs): string {
   return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
 }
 
-export function deserializeRecipeFromUrl(): Partial<RecipeInputs> | null {
+export function deserializeRecipeFromUrl(): URLState | null {
   const params = new URLSearchParams(window.location.search);
 
   if (!params.has('type')) {
     return null;
   }
 
-  const result: Partial<RecipeInputs> = {};
+  const result: URLState = {};
+
+  const hideControls = params.get('hideControls');
+  if (hideControls) {
+    result.hideControls = hideControls === 'true';
+  }
 
   const type = params.get('type') as DoughType;
   if (type) result.doughType = type;

@@ -1,7 +1,7 @@
 import { DOUGH_PRESETS } from '@data/doughPresets';
 import type { DoughType, PrefermentConfig, RecipeInputs } from '@types';
 import { calculateRecipe } from '@utils/calculations';
-import { deserializeRecipeFromUrl, serializeRecipeToUrl } from '@utils/urlState';
+import { deserializeRecipeFromUrl, serializeRecipeToUrl, type URLState } from '@utils/urlState';
 import { useEffect, useMemo, useState } from 'react';
 
 // Load state from URL only once on module load
@@ -64,7 +64,11 @@ export function useDoughCalculator() {
       hydration,
       preferment,
     };
-    return serializeRecipeToUrl(inputs);
+    return serializeRecipeToUrl(inputs, true);
+  };
+
+  const getURLStateParamValue = <K extends keyof URLState>(paramName: K): URLState[K] | null => {
+    return initialUrlState?.[paramName] || null;
   };
 
   return {
@@ -82,6 +86,7 @@ export function useDoughCalculator() {
     // Actions
     reset: handleReset,
     getShareableUrl,
+    getURLStateParamValue,
   };
 }
 
