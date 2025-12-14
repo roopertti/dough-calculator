@@ -32,6 +32,20 @@ export const radius = stylex.defineVars({
   lg: '12px',
 });
 
+// Animation timing tokens (3 tokens)
+export const animations = stylex.defineVars({
+  durationFast: '0.15s',
+  durationNormal: '0.3s',
+  durationSlow: '0.5s',
+});
+
+// Animation easing tokens (3 tokens)
+export const easing = stylex.defineVars({
+  standard: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+  decelerate: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+  accelerate: 'cubic-bezier(0.4, 0.0, 1, 1)',
+});
+
 // Responsive breakpoints
 export const breakpoints = {
   mobile: '@media (max-width: 768px)',

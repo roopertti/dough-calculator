@@ -4,6 +4,8 @@ export type { CardProps } from './Card/Card';
 export { default as Card } from './Card/Card';
 export type { CardContentProps } from './CardContent/CardContent';
 export { default as CardContent } from './CardContent/CardContent';
+export type { CollapsibleProps } from './Collapsible/Collapsible';
+export { default as Collapsible } from './Collapsible/Collapsible';
 export type { ContainerProps } from './Container/Container';
 export { default as Container } from './Container/Container';
 export type { ControlSectionProps } from './ControlSection/ControlSection';

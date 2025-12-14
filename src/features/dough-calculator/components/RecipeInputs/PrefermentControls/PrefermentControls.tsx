@@ -1,5 +1,5 @@
 import type { PrefermentConfig, PrefermentType, SourdoughRatio } from '@types';
-import { Button, ControlSection } from '@ui';
+import { Button, Collapsible, ControlSection } from '@ui';
 import { useState } from 'react';
 import PrefermentFlourSlider from './PrefermentFlourSlider';
 import PrefermentTypeSelector from './PrefermentTypeSelector';
@@ -65,7 +65,7 @@ export default function PrefermentControls({ preferment, onChange }: PrefermentC
         {showPreferment ? 'Hide' : 'Add'} Preferment
       </Button>
 
-      {showPreferment && (
+      <Collapsible isOpen={showPreferment}>
         <ControlSection>
           <PrefermentTypeSelector
             value={preferment?.type || 'poolish'}
@@ -89,7 +89,7 @@ export default function PrefermentControls({ preferment, onChange }: PrefermentC
             </>
           )}
         </ControlSection>
-      )}
+      </Collapsible>
     </div>
   );
 }

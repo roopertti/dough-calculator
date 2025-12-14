@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import { colors, radius, spacing } from '../../../styles/tokens.stylex'; // Note: StyleX requires relative paths due to babel plugin limitations
+import { animations, colors, easing, radius, spacing } from '../../../styles/tokens.stylex'; // Note: StyleX requires relative paths due to babel plugin limitations
 
 export interface CardProps {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ const styles = stylex.create({
     borderColor: colors.border,
     borderRadius: radius.md,
     backgroundColor: colors.bgSecondary,
-    transition: 'all 0.2s ease',
+    transition: `all ${animations.durationFast} ${easing.standard}`,
   },
   interactive: {
     cursor: 'pointer',

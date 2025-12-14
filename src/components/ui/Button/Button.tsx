@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import { colors, radius, spacing } from '../../../styles/tokens.stylex'; // Note: StyleX requires relative paths due to babel plugin limitations
+import { animations, colors, easing, radius, spacing } from '../../../styles/tokens.stylex'; // Note: StyleX requires relative paths due to babel plugin limitations
 
 export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'text';
@@ -18,7 +18,7 @@ const styles = stylex.create({
     cursor: 'pointer',
     fontSize: '1rem',
     fontWeight: 500,
-    transition: 'all 0.2s ease',
+    transition: `all ${animations.durationFast} ${easing.standard}`,
     fontFamily: 'inherit',
     ':hover': {
       transform: 'translateY(-1px)',
