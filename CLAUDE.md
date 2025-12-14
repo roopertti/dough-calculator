@@ -14,6 +14,9 @@ This is a React web application that calculates bread dough recipes using baker'
 - **Yield calculations**: Automatic approximation of how many pieces (loaves, pizzas, etc.) the recipe will make
 - **Dough-specific baking instructions**: Each dough type includes tailored baking guidance
 - **Minimum yeast amounts**: Yeast is clamped to a minimum of 0.5g for practical measurement
+- **Ingredient animations**: Visual feedback with background flash when ingredient values change
+- **Collapsible accordions**: Organize content into expandable sections with smooth slide animations
+- **Smart URL detection**: Auto-collapses settings when navigating via shared link
 
 ## Project Structure
 
@@ -284,6 +287,16 @@ All design tokens centralized in `src/styles/tokens.stylex.ts`:
 - `md`: 8px
 - `lg`: 12px
 
+**Animation Timing Tokens** (3 tokens):
+- `durationFast`: 0.15s (150ms)
+- `durationNormal`: 0.3s (300ms)
+- `durationSlow`: 0.5s (500ms)
+
+**Animation Easing Tokens** (3 tokens):
+- `standard`: cubic-bezier(0.4, 0.0, 0.2, 1) - Material Design standard
+- `decelerate`: cubic-bezier(0.0, 0.0, 0.2, 1) - Deceleration curve
+- `accelerate`: cubic-bezier(0.4, 0.0, 1, 1) - Acceleration curve
+
 **Responsive Breakpoints**:
 - `mobile`: @media (max-width: 768px)
 
@@ -344,6 +357,8 @@ Available styled components in `src/components/ui/`:
 - `Container`: Responsive container with maxWidth ('sm'|'md'|'lg'|'xl') and padding options
 - `Section`: Content section with optional title and variant ('default'|'elevated')
 - `Grid`: CSS Grid with auto-fit columns and configurable gap
+- `Collapsible`: Smooth height-based slide animation wrapper with opacity transition
+- `Accordion`: Collapsible section with clickable header, title, and rotating chevron icon
 
 **Content Components**:
 - `Card`: Interactive card with selected state, hover effects, and disabled state
@@ -377,10 +392,17 @@ The app supports sharing recipes via URL parameters (`src/utils/urlState.ts`):
 - `flour`: Flour weight in grams
 - `hydration`: Hydration percentage
 - `pref`: Preferment type (poolish, biga, sourdough)
-- `prefFlour`: Preferment flour percentage
-- `prefHydration`: Preferment hydration
-- `prefYeast`: Yeast percentage (for poolish/biga)
-- `ratio`: Sourdough ratio as comma-separated values (e.g., "1,1,1")
+- `prefFlour`: Preferment flour percentage (included for all preferment types)
+- `ratio`: Sourdough ratio as comma-separated values (e.g., "1,1,1") - **sourdough only**
+- `hideControls`: Boolean flag to auto-collapse Recipe Settings accordion
+
+**Important Notes**:
+- Poolish and biga **always use fixed defaults** for hydration and yeast (cannot be manipulated via URL)
+  - Poolish: 100% hydration, 0.1% yeast
+  - Biga: 60% hydration, 0.1% yeast
+- All preferments have customizable `prefFlour` parameter in the URL.
+- Only sourdough includes customizable `ratio` parameter in the URL
+- If URL is shared to someone, the Recipe Settings accordion auto-collapses
 
 **Implementation**:
 - `serializeRecipeToUrl()`: Converts current state to URL
@@ -429,6 +451,61 @@ Special handling for sourdough preferments:
   - "Flour (for starter)" - flour needed to feed starter
   - "Water (for starter)" - water needed to feed starter
   - "Active Starter" - active starter from fridge
+
+## Animations
+
+The app includes smooth CSS-based animations using StyleX (no animation libraries):
+
+**Ingredient Highlight Animation** (`src/features/dough-calculator/hooks/useIngredientChangeTracking.ts`):
+- Detects when ingredient values change (amount or baker's percentage)
+- Applies accent-colored background flash to changed ingredients
+- Animation duration: 600ms (300ms fade in + 300ms fade out)
+- Uses `useRef` to track previous values and avoid highlighting on initial render
+- Automatically works across all recipe sections (simple, main dough, preferment)
+
+**Collapsible/Accordion Animations** (`src/components/ui/Collapsible/Collapsible.tsx`):
+- Height-based slide animation for expanding/collapsing content
+- Combines height transition with opacity fade
+- Uses `scrollHeight` measurement for smooth animations
+- Sets height to `auto` after opening to allow dynamic content resizing
+- Duration: 300ms with deceleration easing
+
+**PrefermentControls Slide Animation**:
+- Wraps controls in `Collapsible` component
+- Smoothly slides down when "Add Preferment" is clicked
+- Smoothly slides up when "Hide Preferment" is clicked
+
+**Accordion Component** (`src/components/ui/Accordion/Accordion.tsx`):
+- Combines clickable header with `Collapsible` content area
+- Rotating chevron icon (180deg rotation)
+- Section-style header with hover effects
+- Keyboard accessible (Enter/Space to toggle)
+- ARIA attributes for screen readers
+
+**Animation Tokens**:
+All animations use centralized timing tokens from `tokens.stylex.ts` for consistency:
+- `animations.durationFast`, `animations.durationNormal`, `animations.durationSlow`
+- `easing.standard`, `easing.decelerate`, `easing.accelerate`
+
+## Accordions
+
+The main app layout uses accordion components to organize content (`src/features/dough-calculator/DoughCalculator.tsx`):
+
+**Recipe Settings Accordion**:
+- Contains: `DoughTypeSelector` and `RecipeInputs`
+- Default: Open on direct page visit
+- Auto-closes when navigating via shared URL (uses `hideControls` URL param)
+
+**Your Recipe Accordion**:
+- Contains: `RecipeDisplay` with calculated recipe
+- Default: Always open
+
+**Implementation Details**:
+- State managed in `DoughCalculatorContent` component
+- Uses `Accordion` UI component for visual presentation
+- URL detection via `URLSearchParams` on component mount
+- Child components (DoughTypeSelector, RecipeInputs, RecipeDisplay) have Section wrappers removed
+- Section titles moved to Accordion `title` props
 
 ## Version Display
 
