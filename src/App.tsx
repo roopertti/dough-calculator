@@ -14,7 +14,9 @@ function App() {
         <DoughCalculator />
       </Main>
 
-      <Footer>Built with React + TypeScript + Vite | v{version}</Footer>
+      <Footer>
+        <a href="https://github.com/roopertti/dough-calculator">Github</a> | v{version}
+      </Footer>
     </PageLayout>
   );
 }
